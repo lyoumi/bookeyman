@@ -1,0 +1,13 @@
+spring:
+    datasource:
+        hikari:
+            username: root
+            password: root
+            maximum-pool-size: 3
+            idle-timeout: 30
+            driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/bookstore
+
+    jpa:
+        hibernate:
+            ddl-auto: update
