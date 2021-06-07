@@ -3,11 +3,14 @@ package com.bookeyman.store.resource;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+import com.bookeyman.store.clients.AuditRSocketClient;
+import com.bookeyman.store.data.AuditReportPayload.ActionType;
 import com.bookeyman.store.data.AuthorPayload;
 import com.bookeyman.store.data.BookPayload;
 import com.bookeyman.store.data.GenrePayload;
 import com.bookeyman.store.entity.Author;
 import com.bookeyman.store.entity.Book;
+import com.bookeyman.store.entity.BookProduct;
 import com.bookeyman.store.entity.Genre;
 import com.bookeyman.store.service.AuthorService;
 import com.bookeyman.store.service.BookService;
@@ -32,6 +35,7 @@ public class AdminBookResource {
     private final GenreService genreService;
     private final AuthorService authorService;
     private final ConverterService converterService;
+    private final AuditRSocketClient auditRSocketClient;
 
     @ResponseStatus(CREATED)
     @PostMapping(value = "book")
@@ -70,5 +74,11 @@ public class AdminBookResource {
     @DeleteMapping(value = "author/{id}")
     public void deleteAuthorById(@PathVariable String id) {
         authorService.deleteById(id);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @PostMapping(value = "audit")
+    public void testAudit() {
+        auditRSocketClient.sendAuditReport(new BookProduct("1", 2.0, 1, false, new Book()), ActionType.PURCHASE);
     }
 }
