@@ -1,8 +1,5 @@
 package com.bookeyman.store.resource;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-
 import com.bookeyman.store.clients.AuditRSocketClient;
 import com.bookeyman.store.data.AuditReportPayload.ActionType;
 import com.bookeyman.store.data.AuthorPayload;
@@ -17,67 +14,57 @@ import com.bookeyman.store.service.BookService;
 import com.bookeyman.store.service.GenreService;
 import com.bookeyman.store.service.mappers.ConverterService;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Mono;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.stereotype.Controller;
 
-@RestController
+@Controller
 @AllArgsConstructor
-@RequestMapping("store/admin")
+@MessageMapping("store/admin")
 public class AdminBookResource {
 
     private final BookService bookService;
     private final GenreService genreService;
     private final AuthorService authorService;
-    private final ConverterService converterService;
+    private final ConverterService converter;
     private final AuditRSocketClient auditRSocketClient;
 
-    @ResponseStatus(CREATED)
-    @PostMapping(value = "book")
-    public BookPayload createBook(@RequestBody BookPayload bookPayload) {
-        Book book = converterService.convert(bookPayload);
-        return converterService.convert(bookService.crateBook(book));
+    @MessageMapping("book")
+    public Mono<BookPayload> createBook(BookPayload bookPayload) {
+        Book book = converter.convert(bookPayload);
+        return bookService.crateBook(book).map(converter::convert);
     }
 
-    @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "book/{id}")
-    public void deleteBookById(@PathVariable String id) {
+    @MessageMapping("book/{id}")
+    public void deleteBookById(@DestinationVariable String id) {
         bookService.deleteBookById(id);
     }
 
-    @ResponseStatus(CREATED)
-    @PostMapping(value = "genre")
-    public GenrePayload createGenre(@RequestBody GenrePayload genrePayload) {
-        Genre genre = converterService.convert(genrePayload);
-        return converterService.convert(genreService.createGenre(genre));
+    @MessageMapping("genre")
+    public Mono<GenrePayload> createGenre(GenrePayload genrePayload) {
+        Genre genre = converter.convert(genrePayload);
+        return genreService.createGenre(genre).map(converter::convert);
     }
 
-    @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "genre/{id}")
-    public void deleteGenreById(@PathVariable String id) {
+    @MessageMapping("genre/{id}")
+    public void deleteGenreById(@DestinationVariable String id) {
         genreService.deleteGenreById(id);
     }
 
-    @ResponseStatus(CREATED)
-    @PostMapping(value = "author")
-    public AuthorPayload createAuthor(@RequestBody AuthorPayload authorPayload) {
-        Author author = converterService.convert(authorPayload);
-        return converterService.convert(authorService.createAuthor(author));
+    @MessageMapping("author")
+    public Mono<AuthorPayload> createAuthor(AuthorPayload authorPayload) {
+        Author author = converter.convert(authorPayload);
+        return authorService.createAuthor(author).map(converter::convert);
     }
 
-    @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "author/{id}")
-    public void deleteAuthorById(@PathVariable String id) {
+    @MessageMapping("author/{id}")
+    public void deleteAuthorById(@DestinationVariable String id) {
         authorService.deleteById(id);
     }
 
-    @ResponseStatus(NO_CONTENT)
-    @PostMapping(value = "audit")
+    @MessageMapping("audit")
     public void testAudit() {
         auditRSocketClient.sendAuditReport(new BookProduct("1", 2.0, 1, false, new Book()), ActionType.PURCHASE);
     }
