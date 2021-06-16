@@ -2,8 +2,8 @@ package com.bookeyman.store.repository;
 
 import com.bookeyman.store.entity.Book;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface BookRepository extends JpaRepository<Book, String> {
+public interface BookRepository extends ReactiveCrudRepository<Book, String> {
 
 }
