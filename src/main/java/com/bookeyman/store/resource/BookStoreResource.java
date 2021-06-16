@@ -11,15 +11,15 @@ import com.bookeyman.store.service.BookService;
 import com.bookeyman.store.service.GenreService;
 import com.bookeyman.store.service.mappers.ConverterService;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -29,47 +29,45 @@ public class BookStoreResource {
     private final BookService bookService;
     private final GenreService genreService;
     private final AuthorService authorService;
-    private final ConverterService converterService;
+    private final ConverterService converter;
 
     @ResponseStatus(OK)
-    @GetMapping(value = "book")
-    public List<BookProductPayload> getAllBookProducts() {
-        return bookService.getAllBookProducts().stream()
-                .map(converterService::convert)
-                .collect(Collectors.toList());
+    @MessageMapping("book")
+    public Flux<BookProductPayload> getAllBookProducts() {
+        return bookService.getAllBookProducts()
+                .map(converter::convert);
     }
 
     @ResponseStatus(OK)
-    @GetMapping(value = "book/{id}")
-    public BookPayload getBookById(@PathVariable String id) {
-        return converterService.convert(bookService.getBookById(id));
+    @MessageMapping("book/{id}")
+    public Mono<BookPayload> getBookById(@DestinationVariable String id) {
+        return bookService.getBookById(id)
+                .map(converter::convert);
     }
 
     @ResponseStatus(OK)
-    @GetMapping(value = "genre")
-    public List<GenrePayload> getGenres() {
-        return genreService.getAllGenres().stream()
-                .map(converterService::convert)
-                .collect(Collectors.toList());
+    @MessageMapping(value = "genre")
+    public Flux<GenrePayload> getGenres() {
+        return genreService.getAllGenres()
+                .map(converter::convert);
     }
 
     @ResponseStatus(OK)
-    @GetMapping(value = "genre/{id}")
-    public GenrePayload getGenreById(@PathVariable String id) {
-        return converterService.convert(genreService.getGenreById(id));
+    @MessageMapping("genre/{id}")
+    public Mono<GenrePayload> getGenreById(@DestinationVariable String id) {
+        return genreService.getGenreById(id).map(converter::convert);
     }
 
     @ResponseStatus(OK)
-    @GetMapping(value = "author")
-    public List<AuthorPayload> getAllAuthors() {
-        return authorService.getAllAuthors().stream()
-                .map(converterService::convert)
-                .collect(Collectors.toList());
+    @MessageMapping(value = "author")
+    public Flux<AuthorPayload> getAllAuthors() {
+        return authorService.getAllAuthors()
+                .map(converter::convert);
     }
 
     @ResponseStatus(OK)
-    @GetMapping(value = "author/{id}")
-    public AuthorPayload getAuthorById(@PathVariable String id) {
-        return converterService.convert(authorService.getAuthorById(id));
+    @MessageMapping(value = "author/{id}")
+    public Mono<AuthorPayload> getAuthorById(@PathVariable String id) {
+        return authorService.getAuthorById(id).map(converter::convert);
     }
 }

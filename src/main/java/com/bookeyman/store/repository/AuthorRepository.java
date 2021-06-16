@@ -1,12 +1,13 @@
 package com.bookeyman.store.repository;
 
 import com.bookeyman.store.entity.Author;
+import reactor.core.publisher.Flux;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.util.List;
 
-public interface AuthorRepository extends JpaRepository<Author, String> {
+public interface AuthorRepository extends ReactiveCrudRepository<Author, String> {
 
-    List<Author> findAllByName(String name);
+    Flux<Author> findAllByName(String name);
 }

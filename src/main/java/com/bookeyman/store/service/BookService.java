@@ -2,19 +2,21 @@ package com.bookeyman.store.service;
 
 import com.bookeyman.store.entity.Book;
 import com.bookeyman.store.entity.BookProduct;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface BookService {
 
-    Book crateBook(Book book);
+    Mono<Book> crateBook(Book book);
 
-    Book getBookById(String id);
+    Mono<Book> getBookById(String id);
 
-    List<Book> getAllBooks();
+    Flux<Book> getAllBooks();
 
     void deleteBookById(String id);
 
-    List<BookProduct> getAllBookProducts();
+    Flux<BookProduct> getAllBookProducts();
 
 }

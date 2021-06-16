@@ -6,10 +6,10 @@ import com.bookeyman.store.repository.BookProductRepository;
 import com.bookeyman.store.repository.BookRepository;
 import com.bookeyman.store.service.BookService;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -19,17 +19,17 @@ public class BookServiceImpl implements BookService {
     private final BookProductRepository bookProductRepository;
 
     @Override
-    public Book crateBook(Book book) {
+    public Mono<Book> crateBook(Book book) {
         return bookRepository.save(book);
     }
 
     @Override
-    public Book getBookById(String id) {
-        return bookRepository.getOne(id);
+    public Mono<Book> getBookById(String id) {
+        return bookRepository.findById(id);
     }
 
     @Override
-    public List<Book> getAllBooks() {
+    public Flux<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookProduct> getAllBookProducts() {
+    public Flux<BookProduct> getAllBookProducts() {
         return bookProductRepository.findAllByIsDisabledIsFalse();
     }
 }

@@ -1,18 +1,20 @@
 package com.bookeyman.store.service;
 
 import com.bookeyman.store.entity.Author;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface AuthorService {
 
-    Author createAuthor(Author author);
+    Mono<Author> createAuthor(Author author);
 
-    Author getAuthorById(String id);
+    Mono<Author> getAuthorById(String id);
 
-    List<Author> getAllAuthors();
+    Flux<Author> getAllAuthors();
 
-    List<Author> getAllAuthorsByName(String name);
+    Flux<Author> getAllAuthorsByName(String name);
 
 
     void deleteById(String id);

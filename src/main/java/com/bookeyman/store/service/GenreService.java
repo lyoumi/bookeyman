@@ -1,18 +1,20 @@
 package com.bookeyman.store.service;
 
 import com.bookeyman.store.entity.Genre;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface GenreService {
 
-    Genre createGenre(Genre genre);
+    Mono<Genre> createGenre(Genre genre);
 
-    List<Genre> getAllGenres();
+    Flux<Genre> getAllGenres();
 
-    List<Genre> getAllGenresByName(String name);
+    Flux<Genre> getAllGenresByName(String name);
 
-    Genre getGenreById(String id);
+    Mono<Genre> getGenreById(String id);
 
     void deleteGenreById(String id);
 }

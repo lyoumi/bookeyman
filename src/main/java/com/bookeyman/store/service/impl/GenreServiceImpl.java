@@ -4,10 +4,10 @@ import com.bookeyman.store.entity.Genre;
 import com.bookeyman.store.repository.GenreRepository;
 import com.bookeyman.store.service.GenreService;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -16,23 +16,23 @@ public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
 
     @Override
-    public Genre createGenre(Genre genre) {
-        return genreRepository.saveAndFlush(genre);
+    public Mono<Genre> createGenre(Genre genre) {
+        return genreRepository.save(genre);
     }
 
     @Override
-    public List<Genre> getAllGenres() {
+    public Flux<Genre> getAllGenres() {
         return genreRepository.findAll();
     }
 
     @Override
-    public List<Genre> getAllGenresByName(String name) {
+    public Flux<Genre> getAllGenresByName(String name) {
         return genreRepository.getAllByName(name);
     }
 
     @Override
-    public Genre getGenreById(String id) {
-        return genreRepository.getOne(id);
+    public Mono<Genre> getGenreById(String id) {
+        return genreRepository.findById(id);
     }
 
     @Override

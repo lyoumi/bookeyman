@@ -1,12 +1,11 @@
 package com.bookeyman.store.repository;
 
 import com.bookeyman.store.entity.BookProduct;
+import reactor.core.publisher.Flux;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-import java.util.List;
+public interface BookProductRepository extends ReactiveCrudRepository<BookProduct, String> {
 
-public interface BookProductRepository extends JpaRepository<BookProduct, String> {
-
-    List<BookProduct> findAllByIsDisabledIsFalse();
+    Flux<BookProduct> findAllByIsDisabledIsFalse();
 }
