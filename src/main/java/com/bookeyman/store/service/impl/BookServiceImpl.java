@@ -1,6 +1,8 @@
 package com.bookeyman.store.service.impl;
 
 import com.bookeyman.store.entity.Book;
+import com.bookeyman.store.entity.BookProduct;
+import com.bookeyman.store.repository.BookProductRepository;
 import com.bookeyman.store.repository.BookRepository;
 import com.bookeyman.store.service.BookService;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final BookProductRepository bookProductRepository;
 
     @Override
     public Book crateBook(Book book) {
@@ -33,5 +36,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(String id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookProduct> getAllBookProducts() {
+        return bookProductRepository.findAllByIsDisabledIsFalse();
     }
 }

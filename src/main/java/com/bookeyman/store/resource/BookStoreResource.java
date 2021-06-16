@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import com.bookeyman.store.data.AuthorPayload;
 import com.bookeyman.store.data.BookPayload;
+import com.bookeyman.store.data.BookProductPayload;
 import com.bookeyman.store.data.GenrePayload;
 import com.bookeyman.store.service.AuthorService;
 import com.bookeyman.store.service.BookService;
@@ -32,8 +33,8 @@ public class BookStoreResource {
 
     @ResponseStatus(OK)
     @GetMapping(value = "book")
-    public List<BookPayload> getAllBooks() {
-        return bookService.getAllBooks().stream()
+    public List<BookProductPayload> getAllBookProducts() {
+        return bookService.getAllBookProducts().stream()
                 .map(converterService::convert)
                 .collect(Collectors.toList());
     }
