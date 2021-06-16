@@ -1,4 +1,4 @@
-package com.bookeyman.store.resource;
+package com.bookeyman.store.listeners;
 
 import com.bookeyman.store.clients.AuditRSocketClient;
 import com.bookeyman.store.data.AuditReportPayload.ActionType;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 @AllArgsConstructor
 @MessageMapping("store/admin")
-public class AdminBookResource {
+public class AdminBookListener {
 
     private final BookService bookService;
     private final GenreService genreService;

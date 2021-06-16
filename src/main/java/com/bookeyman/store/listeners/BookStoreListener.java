@@ -1,4 +1,4 @@
-package com.bookeyman.store.resource;
+package com.bookeyman.store.listeners;
 
 import com.bookeyman.store.data.AuthorPayload;
 import com.bookeyman.store.data.BookPayload;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 @AllArgsConstructor
 @MessageMapping("store")
-public class BookStoreResource {
+public class BookStoreListener {
 
     private final BookService bookService;
     private final GenreService genreService;
@@ -55,7 +55,7 @@ public class BookStoreResource {
                 .map(converter::convert);
     }
 
-    @MessageMapping(value = "author/{id}")
+    @MessageMapping("author/{id}")
     public Mono<AuthorPayload> getAuthorById(@DestinationVariable String id) {
         return authorService.getAuthorById(id).map(converter::convert);
     }
