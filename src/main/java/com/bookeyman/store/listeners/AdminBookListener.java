@@ -22,7 +22,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @AllArgsConstructor
-@MessageMapping("store/admin")
+@MessageMapping("store.admin")
 public class AdminBookListener {
 
     private final BookService bookService;
@@ -37,9 +37,9 @@ public class AdminBookListener {
         return bookService.crateBook(book).map(converter::convert);
     }
 
-    @MessageMapping("book/{id}")
-    public void deleteBookById(@DestinationVariable String id) {
-        bookService.deleteBookById(id);
+    @MessageMapping("book.{id}")
+    public Mono<Void> deleteBookById(@DestinationVariable String id) {
+        return bookService.deleteBookById(id);
     }
 
     @MessageMapping("genre")
@@ -48,7 +48,7 @@ public class AdminBookListener {
         return genreService.createGenre(genre).map(converter::convert);
     }
 
-    @MessageMapping("genre/{id}")
+    @MessageMapping("genre.{id}")
     public void deleteGenreById(@DestinationVariable String id) {
         genreService.deleteGenreById(id);
     }
@@ -59,7 +59,7 @@ public class AdminBookListener {
         return authorService.createAuthor(author).map(converter::convert);
     }
 
-    @MessageMapping("author/{id}")
+    @MessageMapping("author.{id}")
     public void deleteAuthorById(@DestinationVariable String id) {
         authorService.deleteById(id);
     }
