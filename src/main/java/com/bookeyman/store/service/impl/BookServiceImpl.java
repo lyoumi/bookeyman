@@ -34,12 +34,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookById(String id) {
-        bookRepository.deleteById(id);
+    public Mono<Void> deleteBookById(String id) {
+        return bookRepository.deleteById(id);
     }
 
     @Override
     public Flux<BookProduct> getAllBookProducts() {
         return bookProductRepository.findAllByIsDisabledIsFalse();
+    }
+
+    @Override
+    public Flux<BookProduct> getAllBookProductsByParams(String title, Double maxPrice, Double minPrice) {
+        return bookProductRepository.findAll();
     }
 }

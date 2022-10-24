@@ -26,13 +26,22 @@ public class BookStoreListener {
     private final AuthorService authorService;
     private final ConverterService converter;
 
-    @MessageMapping("book")
+    @MessageMapping("book.all")
     public Flux<BookProductPayload> getAllBookProducts() {
         return bookService.getAllBookProducts()
                 .map(converter::convert);
     }
 
-    @MessageMapping("book/{id}")
+
+    @MessageMapping("book.search.{title}.{maxPrice}.{minPrice}")
+    public Flux<BookProductPayload> getAllBookProductsByBookTitle(@DestinationVariable("title") String title,
+                                                                  @DestinationVariable("maxPrice") Double maxPrice,
+                                                                  @DestinationVariable("minPrice") Double minPrice) {
+        return bookService.getAllBookProductsByParams(title, maxPrice, minPrice)
+                .map(converter::convert);
+    }
+
+    @MessageMapping("book.search.id.{id}")
     public Mono<BookPayload> getBookById(@DestinationVariable String id) {
         return bookService.getBookById(id)
                 .map(converter::convert);
@@ -44,7 +53,7 @@ public class BookStoreListener {
                 .map(converter::convert);
     }
 
-    @MessageMapping("genre/{id}")
+    @MessageMapping("genre.{id}")
     public Mono<GenrePayload> getGenreById(@DestinationVariable String id) {
         return genreService.getGenreById(id).map(converter::convert);
     }
@@ -55,7 +64,7 @@ public class BookStoreListener {
                 .map(converter::convert);
     }
 
-    @MessageMapping("author/{id}")
+    @MessageMapping("author.{id}")
     public Mono<AuthorPayload> getAuthorById(@DestinationVariable String id) {
         return authorService.getAuthorById(id).map(converter::convert);
     }
